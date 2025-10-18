@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalendar Peperiksaan Interaktif 2025</title>
+    
+    <!-- Favicon and Homescreen Icon -->
+    <link rel="icon" href="https://smkkualapegang.github.io/imej/logo.jpeg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="https://smkkualapegang.github.io/imej/logo.jpeg">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Skema Warna Pastel */
+        :root {
+            --pastel-pink: #FADADD;
+            --pastel-blue: #A2D2FF;
+            --pastel-purple: #CDB4DB;
+            --light-pink: #FFC8DD;
+            --light-purple: #BDE0FE;
+            --text-dark: #343a40;
+            --header-dark-text: #3f3c56;
+            --bg-light: #F8F9FA;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 40px);
+            margin: 20px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        /* === Bahagian Header Kalendar (Reka Bentuk Baharu) === */
+        .calendar-header {
+            background: linear-gradient(135deg, var(--pastel-blue), var(--light-pink));
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 4px solid var(--pastel-purple);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .header-branding {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .app-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #main-title {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.6rem;
+            line-height: 1.2;
+            color: var(--header-dark-text);
+        }
+
+        #year-display {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--header-dark-text);
+            opacity: 0.8;
+            line-height: 1;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        #month-display {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.8rem;
+            flex-grow: 1;
+            color: var(--header-dark-text);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            color: var(--header-dark-text);
+            font-size: 1.1rem;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Penapis Tingkatan (Reka Bentuk Baharu) */
+        .filter-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            padding: 8px;
+        }
+        .filter-container label {
+            background: transparent;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            color: var(--header-dark-text);
+            font-weight: 500;
+        }
+        .filter-container input[type="radio"] {
+            display: none;
+        }
+        .filter-container input[type="radio"]:checked + label {
+            background: white;
+            color: var(--pastel-purple);
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Badan Kalendar */
+        .calendar-body {
+            display: flex;
+            flex-grow: 1;
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            flex-grow: 1;
+            gap: 5px;
+        }
+
+        .day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 10px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+            min-height: 100px;
+        }
+
+        .day.other-month { color: #ccc; cursor: default; }
+        .day:not(.other-month):hover { border-color: var(--pastel-blue); background-color: #f0f8ff; }
+        .day.selected { background-color: var(--pastel-blue); color: white; border-color: var(--pastel-blue); }
+        .day .date-num { font-size: 1rem; font-weight: 600; }
+
+        .day.today .date-num {
+            background-color: var(--pastel-purple);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .indicators-wrapper { display: flex; gap: 4px; margin-top: 5px; }
+        .event-indicator { width: 8px; height: 8px; border-radius: 50%; }
+        .event-indicator.lower-form { background-color: var(--light-pink); box-shadow: 0 0 5px var(--light-pink); }
+        .event-indicator.upper-form { background-color: var(--pastel-purple); box-shadow: 0 0 5px var(--pastel-purple); }
+
+
+        /* Bahagian Maklumat Peperiksaan */
+        .exam-details-container {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-left: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+        .exam-details-container h3 {
+            color: var(--text-dark);
+            font-weight: 600;
+            border-bottom: 2px solid var(--pastel-purple);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        #exam-list { list-style: none; padding: 0; }
+        #exam-list li { background-color: #F8F9FA; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        #exam-list li.lower-form { border-left: 5px solid var(--light-pink); }
+        #exam-list li.upper-form { border-left: 5px solid var(--pastel-purple); }
+        .exam-subject { font-weight: 600; color: var(--text-dark); }
+        .exam-level, .exam-time { font-size: 0.9rem; color: #6c757d; }
+        #no-exam-message { color: #6c757d; text-align: center; padding: 2rem; }
+        
+        /* Reka bentuk mesra mobile */
+        @media (max-width: 992px) {
+            .calendar-container { height: auto; }
+            .day { min-height: 80px; padding-top: 5px; }
+            .day .date-num { font-size: 0.9rem; }
+            .day.today .date-num { width: 25px; height: 25px; }
+            .weekdays span { font-size: 0.8rem; }
+        }
+        @media (max-width: 768px) {
+            .weekdays { font-weight: 400; }
+            .weekdays span { font-size: 0.7rem; }
+            .day { min-height: 60px; }
+            .event-indicator { width: 5px; height: 5px; }
+            #main-title { font-size: 1.1rem; }
+            #year-display { font-size: 2rem; }
+            .app-logo { width: 45px; height: 45px; }
+            #month-display { font-size: 1.5rem; }
+            .filter-container label { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Bahagian Kalendar -->
+            <div class="col-lg-8 p-0">
+                <div class="calendar-container">
+                    <header class="calendar-header">
+                        <div class="header-top">
+                            <div class="header-branding">
+                                <img src="https://smkkualapegang.github.io/imej/logo.jpeg" alt="Logo SMK Kuala Pegang" class="app-logo">
+                                <h1 id="main-title">Kalendar<br>Peperiksaan</h1>
+                            </div>
+                            <div id="year-display"></div>
+                        </div>
+                        <div class="calendar-nav">
+                            <button id="prev-month" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                            <h2 id="month-display"></h2>
+                            <button id="next-month" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="filter-container">
+                            <input type="radio" id="filter-all" name="filter" value="all" checked>
+                            <label for="filter-all"><i class="fas fa-layer-group"></i> Semua</label>
+                            
+                            <input type="radio" id="filter-lower" name="filter" value="lower-form">
+                            <label for="filter-lower"><i class="fas fa-shapes"></i> Men. Rendah</label>
+                            
+                            <input type="radio" id="filter-upper" name="filter" value="upper-form">
+                            <label for="filter-upper"><i class="fas fa-atom"></i> Men. Atas</label>
+                        </div>
+                    </header>
+                    <div class="calendar-body">
+                        <div class="weekdays">
+                            <span>Ahd</span><span>Isn</span><span>Sel</span><span>Rab</span><span>Kha</span><span>Jum</span><span>Sab</span>
+                        </div>
+                        <div class="days" id="calendar-days"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Bahagian Maklumat Peperiksaan -->
+            <div class="col-lg-4 p-0">
+                <div class="exam-details-container h-100">
+                    <h3 id="details-date">Maklumat Peperiksaan</h3>
+                    <ul id="exam-list"></ul>
+                    <p id="no-exam-message">Pilih tarikh pada kalendar untuk melihat jadual peperiksaan.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Unsur DOM
+            const yearDisplayEl = document.getElementById('year-display');
+            const monthDisplayEl = document.getElementById('month-display');
+            const calendarDaysEl = document.getElementById('calendar-days');
+            const prevMonthBtn = document.getElementById('prev-month');
+            const nextMonthBtn = document.getElementById('next-month');
+            const detailsDateEl = document.getElementById('details-date');
+            const examListEl = document.getElementById('exam-list');
+            const noExamMessageEl = document.getElementById('no-exam-message');
+            const filterInputs = document.querySelectorAll('input[name="filter"]');
+
+            // Data Peperiksaan
+            const examData = [
+                // ... (Data peperiksaan tidak berubah, jadi diringkaskan)
+                 // Tingkatan 1, 2 & 3
+                { date: "2025-10-22", level: "Tingkatan 1, 2 & 3", subject: "Bahasa Melayu 1 (02/1)", time: "8:00 - 9:30", duration: "1 jam 30 minit", category: "lower-form" },
+                { date: "2025-10-22", level: "Tingkatan 1, 2 & 3", subject: "Bahasa Melayu 2 (02/2)", time: "10:20 - 10:50", duration: "30 minit", category: "lower-form" },
+                { date: "2025-10-23", level: "Tingkatan 1, 2 & 3", subject: "Bahasa Inggeris 1 (12/1)", time: "8:00 - 9:30", duration: "1 jam 30 minit", category: "lower-form" },
+                { date: "2025-10-23", level: "Tingkatan 1, 2 & 3", subject: "Bahasa Inggeris 2 (12/2)", time: "10:20 - 10:50", duration: "30 minit", category: "lower-form" },
+                { date: "2025-10-26", level: "Tingkatan 1, 2 & 3", subject: "Sejarah (21)", time: "8:00 - 10:00", duration: "2 jam", category: "lower-form" },
+                { date: "2025-10-26", level: "Tingkatan 1, 2 & 3", subject: "Pend. Jasmani dan Kesihatan", time: "11:00 - 12:00", duration: "1 jam", category: "lower-form" },
+                { date: "2025-10-26", level: "Tingkatan 1, 2 & 3", subject: "Matematik (50)", time: "12:20 - 1:20", duration: "1 jam", category: "lower-form" },
+                { date: "2025-10-27", level: "Tingkatan 1, 2 & 3", subject: "Reka Bentuk dan Teknologi (71)", time: "8:00 - 9:30", duration: "1 jam 30 minit", category: "lower-form" },
+                { date: "2025-10-27", level: "Tingkatan 1, 2 & 3", subject: "Geografi (23)", time: "10:20 - 12:20", duration: "2 jam", category: "lower-form" },
+                { date: "2025-10-28", level: "Tingkatan 1, 2 & 3", subject: "Sains (55)", time: "8:00 - 10:00", duration: "2 jam", category: "lower-form" },
+                { date: "2025-10-28", level: "Tingkatan 1, 2 & 3", subject: "Pendidikan Seni Visual", time: "10:20 - 12:20", duration: "2 jam", category: "lower-form" },
+                { date: "2025-10-29", level: "Tingkatan 1, 2 & 3", subject: "Pendidikan Islam (45)", time: "8:00 - 10:00", duration: "2 jam", category: "lower-form" },
+                { date: "2025-10-29", level: "Tingkatan 1, 2 & 3", subject: "Pendidikan Moral", time: "8:00 - 9:30", duration: "1 jam 30 minit", category: "lower-form" },
+                { date: "2025-10-29", level: "Tingkatan 1, 2 & 3", subject: "Bahasa Cina (32)", time: "10:20 - 12:20", duration: "2 jam", category: "lower-form" },
+                
+                // Tingkatan 4
+                { date: "2025-11-02", level: "Tingkatan 4", subject: "Bahasa Melayu Kertas 1", time: "8:10 - 10:10", duration: "2 jam", category: "upper-form" },
+                { date: "2025-11-02", level: "Tingkatan 4", subject: "Bahasa Melayu Kertas 2", time: "11:00 - 13:55", duration: "2 jam 55 minit", category: "upper-form" },
+                { date: "2025-11-03", level: "Tingkatan 4", subject: "Bahasa Inggeris Kertas 1", time: "8:10 - 9:40", duration: "1 jam 30 minit", category: "upper-form" },
+                { date: "2025-11-03", level: "Tingkatan 4", subject: "Bahasa Inggeris Kertas 2", time: "11:00 - 12:15", duration: "1 jam 15 minit", category: "upper-form" },
+                { date: "2025-11-04", level: "Tingkatan 4", subject: "Sejarah Kertas 1", time: "8:10 - 9:40", duration: "1 jam 30 minit", category: "upper-form" },
+                { date: "2025-11-04", level: "Tingkatan 4", subject: "Pendidikan Jasmani Kesihatan", time: "9:45 - 10:45", duration: "1 jam", category: "upper-form" },
+                { date: "2025-11-04", level: "Tingkatan 4", subject: "Sejarah Kertas 2", time: "11:00 - 13:15", duration: "2 jam 15 minit", category: "upper-form" },
+                { date: "2025-11-05", level: "Tingkatan 4", subject: "Matematik Kertas 1", time: "8:10 - 9:40", duration: "1 jam 30 minit", category: "upper-form" },
+                { date: "2025-11-05", level: "Tingkatan 4", subject: "Matematik Kertas 2", time: "11:00 - 13:20", duration: "2 jam 20 minit", category: "upper-form" },
+                { date: "2025-11-06", level: "Tingkatan 4", subject: "Pendidikan Moral", time: "8:10 - 10:40", duration: "2 jam 30 minit", category: "upper-form" },
+                { date: "2025-11-06", level: "Tingkatan 4", subject: "Pendidikan Islam Kertas 1", time: "8:10 - 10:40", duration: "2 jam 30 minit", category: "upper-form" },
+                { date: "2025-11-06", level: "Tingkatan 4", subject: "Bahasa Cina Kertas 1", time: "11:00 - 12:25", duration: "1 jam 25 minit", category: "upper-form" },
+                { date: "2025-11-09", level: "Tingkatan 4", subject: "Sains Kertas 1", time: "8:10 - 9:25", duration: "1 jam 15 minit", category: "upper-form" },
+                { date: "2025-11-09", level: "Tingkatan 4", subject: "Sains Kertas 2", time: "11:00 - 13:55", duration: "2 jam 55 minit", category: "upper-form" },
+                { date: "2025-11-10", level: "Tingkatan 4", subject: "Pertanian", time: "8:10 - 10:40", duration: "2 jam 30 minit", category: "upper-form" },
+                { date: "2025-11-13", level: "Tingkatan 4", subject: "Bahasa Cina Kertas 2", time: "8:10 - 10:40", duration: "2 jam 30 minit", category: "upper-form" },
+                { date: "2025-11-13", level: "Tingkatan 4", subject: "Perniagaan Kertas 1", time: "8:10 - 9:25", duration: "1 jam 15 minit", category: "upper-form" },
+                { date: "2025-11-13", level: "Tingkatan 4", subject: "Ekonomi Kertas 1", time: "8:10 - 9:25", duration: "1 jam 15 minit", category: "upper-form" },
+                { date: "2025-11-13", level: "Tingkatan 4", subject: "Ekonomi Kertas 2", time: "11:00 - 13:45", duration: "2 jam 45 minit", category: "upper-form" },
+                { date: "2025-11-13", level: "Tingkatan 4", subject: "Perniagaan Kertas 2", time: "11:30 - 13:45", duration: "2 jam 15 minit", category: "upper-form" },
+                { date: "2025-11-16", level: "Tingkatan 4", subject: "Tasawur Islam", time: "8:10 - 10:40", duration: "2 jam 30 minit", category: "upper-form" },
+                { date: "2025-11-17", level: "Tingkatan 4", subject: "Geografi Kertas 1", time: "8:10 - 9:25", duration: "1 jam 15 minit", category: "upper-form" },
+                { date: "2025-11-17", level: "Tingkatan 4", subject: "Geografi Kertas 2", time: "11:00 - 13:10", duration: "2 jam 10 minit", category: "upper-form" },
+                { date: "2025-11-18", level: "Tingkatan 4", subject: "Pendidikan Seni Visual Kertas 1", time: "8:00 - 11:20", duration: "3 jam 20 minit", category: "upper-form" },
+                { date: "2025-11-18", level: "Tingkatan 4", subject: "Pendidikan Seni Visual Kertas 2", time: "12:30 - 13:30", duration: "1 jam", category: "upper-form" },
+                { date: "2025-11-19", level: "Tingkatan 4", subject: "Sains Rumah Tangga", time: "8:10 - 10:40", duration: "2 jam 30 minit", category: "upper-form" },
+            ];
+            
+            let currentDate = new Date(2025, 9, 1); // Mula dari Oktober 2025
+            let currentFilter = 'all';
+
+            function renderCalendar() {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const lastDateOfMonth = new Date(year, month + 1, 0).getDate();
+                
+                const monthNames = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
+                
+                yearDisplayEl.textContent = year;
+                monthDisplayEl.textContent = monthNames[month];
+                
+                calendarDaysEl.innerHTML = '';
+                
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    calendarDaysEl.innerHTML += `<div class="day other-month"></div>`;
+                }
+                
+                const filteredExams = examData.filter(exam => currentFilter === 'all' || exam.category === currentFilter);
+                const today = new Date();
+                
+                for (let i = 1; i <= lastDateOfMonth; i++) {
+                    const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                    const dayEl = document.createElement('div');
+                    dayEl.classList.add('day');
+                    dayEl.dataset.date = dateString;
+                    
+                    const dateNum = document.createElement('span');
+                    dateNum.classList.add('date-num');
+                    dateNum.textContent = i;
+                    dayEl.appendChild(dateNum);
+
+                    if (year === today.getFullYear() && month === today.getMonth() && i === today.getDate()) {
+                        dayEl.classList.add('today');
+                    }
+                    
+                    const examsOnDay = filteredExams.filter(exam => exam.date === dateString);
+                    if (examsOnDay.length > 0) {
+                        const hasLower = examsOnDay.some(e => e.category === 'lower-form');
+                        const hasUpper = examsOnDay.some(e => e.category === 'upper-form');
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'indicators-wrapper';
+                        if(hasLower) {
+                            const indicator = document.createElement('div');
+                            indicator.className = 'event-indicator lower-form';
+                            wrapper.appendChild(indicator);
+                        }
+                        if(hasUpper) {
+                            const indicator = document.createElement('div');
+                            indicator.className = 'event-indicator upper-form';
+                            wrapper.appendChild(indicator);
+                        }
+                        dayEl.appendChild(wrapper);
+                    }
+                    dayEl.addEventListener('click', () => showExamDetails(dateString));
+                    calendarDaysEl.appendChild(dayEl);
+                }
+                const selectedDay = document.querySelector('.day.selected');
+                if (selectedDay) {
+                    showExamDetails(selectedDay.dataset.date);
+                }
+            }
+
+            function showExamDetails(dateString) {
+                const dateObj = new Date(dateString + 'T00:00:00');
+                detailsDateEl.textContent = dateObj.toLocaleDateString('ms-MY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                
+                const prevSelected = document.querySelector('.day.selected');
+                if (prevSelected) prevSelected.classList.remove('selected');
+                
+                const currentDayEl = document.querySelector(`.day[data-date='${dateString}']`);
+                if (currentDayEl) currentDayEl.classList.add('selected');
+
+                const examsOnDay = examData.filter(exam => exam.date === dateString && (currentFilter === 'all' || exam.category === currentFilter));
+                
+                examListEl.innerHTML = ''; 
+                
+                if (examsOnDay.length > 0) {
+                    noExamMessageEl.style.display = 'none';
+                    examsOnDay.forEach(exam => {
+                        const li = document.createElement('li');
+                        li.classList.add(exam.category);
+                        li.innerHTML = `<div class="exam-subject">${exam.subject}</div><div class="exam-level">${exam.level}</div><div class="exam-time"><i class="far fa-clock"></i> ${exam.time} (${exam.duration})</div>`;
+                        examListEl.appendChild(li);
+                    });
+                } else {
+                    noExamMessageEl.style.display = 'block';
+                    noExamMessageEl.textContent = "Tiada peperiksaan pada tarikh ini untuk tingkatan yang dipilih.";
+                }
+            }
+
+            prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
+            nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
+            filterInputs.forEach(input => input.addEventListener('change', (e) => { currentFilter = e.target.value; renderCalendar(); }));
+
+            renderCalendar();
+            showExamDetails("2025-10-22");
+        });
+    </script>
+</body>
+</html>
+
