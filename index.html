@@ -168,7 +168,7 @@
             display: flex;
             flex-grow: 1;
             flex-direction: column;
-            padding: 1rem;
+            padding: 1rem 1rem 0 1rem;
         }
 
         .weekdays {
@@ -222,7 +222,44 @@
         .event-indicator { width: 8px; height: 8px; border-radius: 50%; }
         .event-indicator.lower-form { background-color: var(--light-pink); box-shadow: 0 0 5px var(--light-pink); }
         .event-indicator.upper-form { background-color: var(--pastel-purple); box-shadow: 0 0 5px var(--pastel-purple); }
-
+        
+        /* === Seksyen Nota Penting (Baharu) === */
+        .important-notes {
+            padding: 1rem;
+            margin: 0 1rem 1rem 1rem;
+            background-color: #fff9e6; /* Warna kuning pastel lembut */
+            border-radius: 10px;
+            border: 1px solid #ffecb3;
+        }
+        .important-notes h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #856404; /* Warna teks yang sepadan */
+            margin-bottom: 0.75rem;
+        }
+        .important-notes ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        .important-notes li {
+            font-size: 0.85rem;
+            color: #555;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .important-notes li::before {
+            content: '\f058'; /* Ikon check circle dari Font Awesome */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--pastel-purple);
+        }
+        .important-notes li + li {
+            margin-top: 0.5rem;
+        }
 
         /* Bahagian Maklumat Peperiksaan */
         .exam-details-container {
@@ -303,6 +340,13 @@
                             <span>Ahd</span><span>Isn</span><span>Sel</span><span>Rab</span><span>Kha</span><span>Jum</span><span>Sab</span>
                         </div>
                         <div class="days" id="calendar-days"></div>
+                    </div>
+                    <div class="important-notes">
+                        <h4><i class="fas fa-exclamation-circle"></i> Nota Penting</h4>
+                        <ul>
+                            <li>Peperiksaan Bahasa Cina akan diuruskan oleh Puan Wee Liep Theng.</li>
+                            <li>Tarikh akhir masukkan markah ke dalam sistem iDMe adalah pada <strong>15 Disember 2025</strong>.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -485,6 +529,4 @@
     </script>
 </body>
 </html>
-
-
 
